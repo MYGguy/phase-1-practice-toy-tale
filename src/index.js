@@ -18,7 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
     .then(json => handleToys(json));
 
   document.querySelector('.add-toy-form').addEventListener('submit', e => fetchNewToy(e));
-
 });
 
 function handleToys(data) {
@@ -29,7 +28,7 @@ function handleToys(data) {
       <h2>${element.name}</h2>
       <img src="${element.image}" class="toy-avatar"/>
       <p></p>
-      <button class="like-btn" id="${element.id}">Like ❤️</button>
+      <button class="like-btn" id="${element.id}" onclick="updateLikes(event)">Like ❤️</button>
     </div>`;
     document.querySelector('#toy-collection').appendChild(div)
   })
@@ -60,6 +59,12 @@ function fetchNewToy(e) {
     .then(res => res.json())
     .then(json => handleToys([json]))
 
+}
+
+function updateLikes(event) {
+  fetch('http://localhost:3000/toys')
+    .then(res => res.json)
+    .then(json => console.log(event.target))
 }
 
 
