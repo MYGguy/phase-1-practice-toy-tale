@@ -27,7 +27,7 @@ function handleToys(data) {
     <div class="card">
       <h2>${element.name}</h2>
       <img src="${element.image}" class="toy-avatar"/>
-      <p></p>
+      <p>${element.likes} likes</p>
       <button class="like-btn" id="${element.id}" onclick="updateLikes(event)">Like ❤️</button>
     </div>`;
     document.querySelector('#toy-collection').appendChild(div)
@@ -39,7 +39,6 @@ function fetchNewToy(e) {
 
   const name = e.target.name.value;
   const image = e.target.image.value;
-  const likes = e.target.likes;
 
 
   const postConfigObject = {
@@ -51,7 +50,7 @@ function fetchNewToy(e) {
     body: JSON.stringify({
       'name': name,
       'image': image,
-      'likes': likes,
+      'likes': '0',
     })
   };
 
@@ -62,9 +61,24 @@ function fetchNewToy(e) {
 }
 
 function updateLikes(event) {
-  fetch('http://localhost:3000/toys')
-    .then(res => res.json)
-    .then(json => console.log(event.target))
+  event.preventDefault();
+
+  const likes = parseInt(event.target.previousElementSibling.textContent);
+
+  patchConfigObject = {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    body: JSON.stringify({
+      'likes': likes + 1,
+    })
+  }
+
+  fetch(`http://localhost:3000/toys/${event.target.id}`, patchConfigObject)
+    .then(res => res.json())
+    .then(updatedLikes => event.target.previousElementSibling.textContent = `${updatedLikes.likes} likes`)
 }
 
 
