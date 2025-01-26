@@ -15,7 +15,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
   fetch('http://localhost:3000/toys')
     .then(res => res.json())
-    .then(json => handleToys(json))
+    .then(json => handleToys(json));
+
+  document.querySelector('.add-toy-form').addEventListener('submit', e => fetchNewToy(e));
+
+  function fetchNewToy(e) {
+    e.preventDefault();
+    const name = e.target.name.value;
+    const image = e.target.image.value;
+    const likes = e.target.likes;
+
+    const postConfigObject = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        'name': name,
+        'image': image,
+        'likes': likes,
+      })
+    }
+
+    fetch('http://localhost:3000/toys', postConfigObject)
+    // .then(res => res.json())
+    // .then(json => console.log(json))
+  }
+
 });
 
 function handleToys(data) {
@@ -30,6 +57,9 @@ function handleToys(data) {
     </div>`;
     document.querySelector('#toy-collection').appendChild(div)
   })
-
 }
+
+
+
+
 
